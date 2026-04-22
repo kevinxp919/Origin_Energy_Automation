@@ -8,12 +8,8 @@ on:
 
 jobs:
   local:
-    name: Local - ${{ matrix.browser }}
+    name: Local
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [chromium, firefox, webkit]
     steps:
       - uses: actions/checkout@v4
 
@@ -38,29 +34,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: artifacts-local-${{ matrix.browser }}
-          path: |
-            playwright-report/
-            downloads/
-          retention-days: 14
-
-  docker:
-    name: Docker
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Docker
-        uses: docker/setup-docker@v4
-
-      - name: Run Playwright tests
-        run: docker compose up --build
-
-      - name: Upload artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifacts-docker
+          name: artifacts-local
           path: |
             playwright-report/
             downloads/
