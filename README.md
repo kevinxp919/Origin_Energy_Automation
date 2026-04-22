@@ -31,11 +31,11 @@ Automated end-to-end test for the Origin Energy website plan search flow, built 
 ├── tests/e2e/
 │   └── pricing.spec.ts     # Single test suite (10 steps above)
 ├── utils/
-│   └── pdfUtils.ts         # PDF text extraction + Gas/Electricity detection
+│   └── pdfUtils.ts         # PDF text extraction + Gas plan detection
 ├── playwright.config.ts   # Reporters, timeouts, browser matrix
 ├── Dockerfile              # Multi-stage build, Playwright + pdf-parse
-├── docker-compose.yml      # docker-compose up
-├── .github/workflows/      # GitHub Actions (local + Docker)
+├── docker-compose.yml      # Local Docker run
+├── .github/workflows/      # GitHub Actions CI
 └── package.json           # npm scripts
 ```
 
@@ -56,7 +56,7 @@ npm run report
 
 ---
 
-## Docker
+## Docker (Local)
 
 ```bash
 # Build and run
@@ -74,18 +74,14 @@ Results are available on the host via volume mounts:
 
 ## GitHub Actions CI
 
-The project runs CI on every push and pull request to `main` via `.github/workflows/playwright.yml`.
+The project runs CI on every push and pull request to `main` and feature branches via `.github/workflows/playwright.yml`.
 
-**Two jobs:**
+**CI job (`CI`):**
 
-| Job | Trigger | Description |
-|-----|---------|-------------|
-| `local` | push/PR | Runs tests on ubuntu with chromium, firefox, webkit in parallel |
-| `docker` | push/PR | Builds Docker image and runs tests inside container |
+Runs on ubuntu with all three browsers (chromium, firefox, webkit) defined in `playwright.config.ts`.
 
 **CI environment:**
 - `CI: true` — enables retries (2x), single worker, `forbidOnly` enforcement
-- `TRACE`, `VIDEO`, `SCREENSHOT: off` — disabled on CI to save disk
 
 **Artifacts uploaded** (retained 14 days):
 - `playwright-report/` — HTML + JSON report
