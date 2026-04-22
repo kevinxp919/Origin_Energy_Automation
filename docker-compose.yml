@@ -1,0 +1,12 @@
+services:
+  playwright-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: origin-energy-automation
+    volumes:
+      - ./playwright-report:/workspace/playwright-report
+      - ./test-results:/workspace/test-results
+      - ./downloads:/workspace/downloads
+    stdin_open: true
+    tty: true

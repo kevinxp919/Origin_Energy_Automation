@@ -1,0 +1,64 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  local:
+    name: Local - ${{ matrix.browser }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Run Playwright tests
+        run: npx playwright test --reporter=line
+        env:
+          CI: true
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-local-${{ matrix.browser }}
+          path: |
+            playwright-report/
+            downloads/
+          retention-days: 14
+
+  docker:
+    name: Docker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Playwright tests
+        run: docker-compose up --build
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-docker
+          path: |
+            playwright-report/
+            downloads/
+          retention-days: 14
