@@ -28,9 +28,9 @@ test.describe('Origin Energy — Plan Search & PDF Verification', () => {
 
   test.beforeEach(async ({ page }) => {
     pricingPage = new PricingPage(page)
-
-    fs.rmSync(DOWNLOADS_DIR, { recursive: true, force: true })
-    fs.mkdirSync(DOWNLOADS_DIR, { recursive: true })
+    if (!fs.existsSync(DOWNLOADS_DIR)) {
+      fs.mkdirSync(DOWNLOADS_DIR, { recursive: true })
+    }
   })
 
   test('complete plan search and gas PDF verification flow', async ({ context }) => {

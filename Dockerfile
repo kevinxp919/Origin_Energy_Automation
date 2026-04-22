@@ -42,8 +42,5 @@ COPY --from=builder /workspace/playwright.config.ts playwright.config.ts
 # Create directories for test results, artifacts and downloads
 RUN mkdir -p /workspace/downloads
 
-# Set environment variables
-ENV CI=true
-
 # Default command to run tests
 CMD ["npm", "test"]
