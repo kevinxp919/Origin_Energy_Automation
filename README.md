@@ -102,3 +102,7 @@ Playwright generates three output formats automatically:
 Screenshots (.png), videos (.webm), and traces (.zip) are stored in `playwright-report/data/` and `playwright-report/trace/` and linked from the HTML report.
 
 ---
+
+## Test Result
+
+![Playwright Test Result](tests/screenshot/TestResult_Overview.png)
