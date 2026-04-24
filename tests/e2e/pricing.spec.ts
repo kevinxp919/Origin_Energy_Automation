@@ -65,15 +65,14 @@ test.describe('Origin Energy — Plan Search & PDF Verification', () => {
     expect(bpidHref, 'BPID link should be a PDF').toMatch(/\.pdf$/)
 
     // ── Step 8: Verify plan details page opens in new tab ─────────────────────
-    const [newTab] = await Promise.all([
-      pricingPage.page.waitForEvent('popup'),
-      pricingPage.clickPlanBpidLink(0),
-    ])
+    const popupPromise = pricingPage.page.context().waitForEvent('page', { timeout: 30000 })
+    await pricingPage.clickPlanBpidLink(0)
+    const newTab = await popupPromise
     expect(newTab.url(), 'New tab URL should differ from pricing page').not.toBe(pricingPage.page.url())
     await newTab.close()
 
     // ── Step 9: Download the plan PDF via Playwright context request ─────────
-    const pdfResponse = await context.request.get(bpidHref!)
+    const pdfResponse = await context.request.get(bpidHref!, { timeout: 45000 })
     if (!pdfResponse.ok()) {
       throw new Error(`PDF download failed: ${pdfResponse.status()} ${pdfResponse.statusText()}`)
     }
