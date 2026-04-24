@@ -1,8 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './BasePage';
 
-const STABILIZE_DELAY = 2000;
-
 export class PricingPage extends BasePage {
   readonly addressSearchInput: Locator
   readonly addressSearchResults: Locator
@@ -27,14 +25,13 @@ export class PricingPage extends BasePage {
   async navigate() {
     await this.goto('/pricing.html')
     await this.closePopups()
-    await this.page.waitForTimeout(1000)
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async searchAddress(address: string) {
     await this.addressSearchInput.click()
     await this.addressSearchInput.fill(address)
     await this.addressSearchResults.waitFor({ state: 'visible', timeout: 10000 })
-    await this.page.waitForTimeout(300)
   }
 
   async getSearchResults(): Promise<string[]> {
@@ -47,7 +44,7 @@ export class PricingPage extends BasePage {
     if (items.length === 0) throw new Error('No address search results found')
     if (addressIndex >= items.length) throw new Error(`Address index ${addressIndex} out of range`)
     await items[addressIndex].click()
-    await this.page.waitForTimeout(2000)
+    await this.page.waitForLoadState('load', { timeout: 15000 })
   }
 
   async verifyPlansDisplayed(): Promise<number> {
@@ -61,7 +58,10 @@ export class PricingPage extends BasePage {
     const currentState = await this.electricityCheckbox.isChecked()
     if (currentState !== false) {
       await this.electricityCheckbox.click()
-      await this.page.waitForTimeout(STABILIZE_DELAY)
+      await this.page.waitForFunction(() => {
+        const links = document.querySelectorAll('table a[href*=".pdf"]')
+        return links.length > 0
+      }, { timeout: 15000 })
     }
   }
 
