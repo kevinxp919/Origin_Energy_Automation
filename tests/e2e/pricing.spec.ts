@@ -73,7 +73,7 @@ test.describe('Origin Energy — Plan Search & PDF Verification', () => {
     await newTab.close()
 
     // ── Step 9: Download the plan PDF via Playwright context request ─────────
-    const pdfResponse = await context.request.get(bpidHref!)
+    const pdfResponse = await context.request.get(bpidHref!, { timeout: 60000 })
     if (!pdfResponse.ok()) {
       throw new Error(`PDF download failed: ${pdfResponse.status()} ${pdfResponse.statusText()}`)
     }
