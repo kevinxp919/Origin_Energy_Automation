@@ -48,6 +48,7 @@ export class PricingPage extends BasePage {
   }
 
   async verifyPlansDisplayed(): Promise<number> {
+    await this.plansContainer.waitFor({ state: 'visible', timeout: 20000 })
     await expect(this.plansContainer).toBeVisible()
     const planCount = await this.planBpidLinks.count()
     if (planCount === 0) throw new Error('No plans found on the page')
@@ -66,6 +67,7 @@ export class PricingPage extends BasePage {
   }
 
   async verifyPlansStillVisible(): Promise<number> {
+    await this.planBpidLinks.first().waitFor({ state: 'visible', timeout: 15000 })
     const planCount = await this.planBpidLinks.count()
     expect(planCount).toBeGreaterThan(0)
     return planCount
