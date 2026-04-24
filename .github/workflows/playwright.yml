@@ -22,7 +22,7 @@ jobs:
         run: npm ci && npx playwright install --with-deps chromium firefox webkit
 
       - name: Run Playwright tests
-        run: npx playwright test --reporter=line
+        run: npx playwright test
         env:
           CI: true
 
