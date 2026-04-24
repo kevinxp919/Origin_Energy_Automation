@@ -24,7 +24,6 @@ export class PricingPage extends BasePage {
 
   async navigate() {
     await this.goto('/pricing.html')
-    await this.closePopups()
     await this.page.waitForLoadState('domcontentloaded')
   }
 
